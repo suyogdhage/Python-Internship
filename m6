@@ -1,0 +1,76 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import os
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, precision_recall_curve, average_precision_score
+
+# Load and clean Titanic dataset
+df = sns.load_dataset('titanic')
+df = df[['pclass', 'sex', 'age', 'fare', 'survived']].dropna()
+df['sex'] = df['sex'].map({'male': 0, 'female': 1})
+
+X = df[['pclass', 'sex', 'age', 'fare']]
+y = df['survived']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create results directory
+os.makedirs("results", exist_ok=True)
+
+# i. Train two binary classification models
+model1 = LogisticRegression()
+model2 = RandomForestClassifier()
+
+model1.fit(X_train, y_train)
+model2.fit(X_train, y_train)
+
+# ii. Predict probabilities
+probs1 = model1.predict_proba(X_test)[:, 1]
+probs2 = model2.predict_proba(X_test)[:, 1]
+
+# iii. Confusion Matrix
+y_pred1 = model1.predict(X_test)
+y_pred2 = model2.predict(X_test)
+
+cm1 = confusion_matrix(y_test, y_pred1)
+cm2 = confusion_matrix(y_test, y_pred2)
+
+disp1 = ConfusionMatrixDisplay(confusion_matrix=cm1)
+disp2 = ConfusionMatrixDisplay(confusion_matrix=cm2)
+
+disp1.plot()
+plt.title("Confusion Matrix - Logistic Regression")
+plt.savefig("results/confusion_matrix_lr.png")
+
+disp2.plot()
+plt.title("Confusion Matrix - Random Forest")
+plt.savefig("results/confusion_matrix_rf.png")
+
+# iv. Precision-Recall Curve
+precision1, recall1, _ = precision_recall_curve(y_test, probs1)
+precision2, recall2, _ = precision_recall_curve(y_test, probs2)
+
+plt.figure()
+plt.plot(recall1, precision1, label="Logistic Regression")
+plt.plot(recall2, precision2, label="Random Forest")
+plt.xlabel("Recall")
+plt.ylabel("Precision")
+plt.title("Precision-Recall Curve")
+plt.legend()
+plt.savefig("results/precision_recall_curve.png")
+plt.close()
+
+# v. Compare Performance
+ap1 = average_precision_score(y_test, probs1)
+ap2 = average_precision_score(y_test, probs2)
+
+print("Average Precision (Logistic Regression):", ap1)
+print("Average Precision (Random Forest):", ap2)
+
+if ap1 > ap2:
+    print("Logistic Regression performs better.")
+else:
+    print("Random Forest performs better.")
