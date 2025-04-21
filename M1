@@ -1,0 +1,38 @@
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+import joblib
+
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+
+model_v1 = LogisticRegression(max_iter=200)
+model_v1.fit(X_train, y_train)
+pred1 = model_v1.predict(X_test)
+acc1 = accuracy_score(y_test, pred1)
+print("Model V1 (Logistic Regression) Accuracy:", acc1)
+
+
+joblib.dump(model_v1, "model_v1.pkl")
+
+
+model_v2 = SVC(kernel='linear', C=1)
+model_v2.fit(X_train, y_train)
+pred2 = model_v2.predict(X_test)
+acc2 = accuracy_score(y_test, pred2)
+print("Model V2 (SVM) Accuracy:", acc2)
+
+
+joblib.dump(model_v2, "model_v2.pkl")
+
+
+with open("results.txt", "w") as f:
+    f.write(f"Model V1 (LogisticRegression): {acc1:.2f} accuracy\n")
+    f.write(f"Model V2 (SVM): {acc2:.2f} accuracy\n")
