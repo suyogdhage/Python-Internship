@@ -1,5 +1,6 @@
 python -m venv ml_env
-source ml_env/bin/activate  # For Windows: ml_env\Scripts\activate
+Windows: ml_env\Scripts\activate
+pip install jupyter scikit-learn pandas matplotlib seaborn
 
 import pandas as pd
 import seaborn as sns
