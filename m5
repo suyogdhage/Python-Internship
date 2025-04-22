@@ -4,19 +4,19 @@ import matplotlib.pyplot as plt
 
 df = sns.load_dataset('titanic')
 
-# Null value handling
+
 df_cleaned = df[['pclass', 'sex', 'age', 'fare', 'survived']].dropna()
 
-# Convert categorical
+
 df_cleaned['sex'] = df_cleaned['sex'].map({'male': 0, 'female': 1})
 
-# Correlation heatmap
+
 sns.heatmap(df_cleaned.corr(), annot=True, cmap='coolwarm')
 plt.title("Correlation Heatmap")
 plt.savefig("correlation_heatmap.png")
 plt.show()
 
-# Age distribution
+
 sns.histplot(df_cleaned['age'], kde=True)
 plt.title("Age Distribution")
 plt.savefig("age_distribution.png")
@@ -24,7 +24,7 @@ plt.show()
 # Basic stats
 print(df_cleaned.describe())
 
-# Outliers
+
 sns.boxplot(x='age', data=df_cleaned)
 plt.title("Age Outliers")
 plt.savefig("age_boxplot.png")
@@ -32,7 +32,7 @@ plt.show()
 # Basic stats
 print(df_cleaned.describe())
 
-# Outliers
+
 sns.boxplot(x='age', data=df_cleaned)
 plt.title("Age Outliers")
 plt.savefig("age_boxplot.png")
