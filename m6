@@ -7,10 +7,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, precision_recall_curve, average_precision_score
 
-# Create results directory if not exists
+
 os.makedirs("results", exist_ok=True)
 
-# Load and clean Titanic dataset
+
 df = sns.load_dataset('titanic')
 df = df[['pclass', 'sex', 'age', 'fare', 'survived']].dropna()
 df['sex'] = df['sex'].map({'male': 0, 'female': 1})
@@ -20,18 +20,18 @@ y = df['survived']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train models
+
 model1 = LogisticRegression()
 model2 = RandomForestClassifier()
 
 model1.fit(X_train, y_train)
 model2.fit(X_train, y_train)
 
-# Predict probabilities
+
 probs1 = model1.predict_proba(X_test)[:, 1]
 probs2 = model2.predict_proba(X_test)[:, 1]
 
-# Confusion Matrix
+
 y_pred1 = model1.predict(X_test)
 y_pred2 = model2.predict(X_test)
 
@@ -41,7 +41,7 @@ cm2 = confusion_matrix(y_test, y_pred2)
 disp1 = ConfusionMatrixDisplay(confusion_matrix=cm1)
 disp2 = ConfusionMatrixDisplay(confusion_matrix=cm2)
 
-# Save confusion matrix images
+
 disp1.plot()
 plt.title("Confusion Matrix - Logistic Regression")
 plt.savefig("results/confusion_matrix_lr.png")
@@ -52,7 +52,7 @@ plt.title("Confusion Matrix - Random Forest")
 plt.savefig("results/confusion_matrix_rf.png")
 plt.close()
 
-# Precision-Recall Curve
+
 precision1, recall1, _ = precision_recall_curve(y_test, probs1)
 precision2, recall2, _ = precision_recall_curve(y_test, probs2)
 
