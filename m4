@@ -21,3 +21,10 @@ model.fit(X_train, y_train)
 preds = model.predict(X_test)
 
 print("Accuracy:", accuracy_score(y_test, preds))
+pip freeze > requirements.txt
+git init
+git add titanic_ml_pipeline.ipynb requirements.txt
+git commit -m "Initial commit with notebook and dependencies"
+git branch -M main
+git remote add origin https://github.com/your-username/ml-pipeline-project.git
+git push -u origin main
